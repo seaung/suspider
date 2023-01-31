@@ -4,5 +4,10 @@ from superspider.urls import Dom
 
 
 class Crawler(object):
-    def __init__(self) -> None:
+    def __init__(self, url: str) -> None:
+        self.allow_urls = [url]
+        self.checker_urls = []
+        self.id = [0]
+
+    def start(self) -> None:
         pass

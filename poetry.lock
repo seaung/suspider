@@ -49,6 +49,34 @@ optional = false
 python-versions = ">=3.5"
 
 [[package]]
+name = "pyqt5"
+version = "5.15.8"
+description = "Python bindings for the Qt cross platform application toolkit"
+category = "main"
+optional = false
+python-versions = ">=3.7"
+
+[package.dependencies]
+PyQt5-Qt5 = ">=5.15.2"
+PyQt5-sip = ">=12.11,<13"
+
+[[package]]
+name = "pyqt5-qt5"
+version = "5.15.2"
+description = "The subset of a Qt installation needed by PyQt5."
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
+name = "pyqt5-sip"
+version = "12.11.1"
+description = "The sip module support for PyQt5"
+category = "main"
+optional = false
+python-versions = ">=3.7"
+
+[[package]]
 name = "requests"
 version = "2.28.2"
 description = "Python HTTP for Humans."
@@ -90,7 +118,7 @@ socks = ["PySocks (>=1.5.6,!=1.5.7,<2.0)"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "83dcfd2f25d9dc56cd03bb6ffee34148c5e719719bbd02ec42f8e9019e30325a"
+content-hash = "657a1902d02a477e88421e2a6bca6d22c3a41d239e33a8a796753199e0ee3e93"
 
 [metadata.files]
 beautifulsoup4 = []
@@ -100,6 +128,9 @@ bs4 = [
 certifi = []
 charset-normalizer = []
 idna = []
+pyqt5 = []
+pyqt5-qt5 = []
+pyqt5-sip = []
 requests = []
 soupsieve = []
 urllib3 = []
