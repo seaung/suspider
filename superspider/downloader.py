@@ -1,4 +1,5 @@
-#from functools import partial
+from functools import partial
+import sys
 from typing import Any, Dict, List
 from PyQt5.QtWidgets import QApplication
 from PyQt5.QtCore import QUrl
@@ -20,10 +21,10 @@ class Downloader(object):
     def _loader_finished(self, browser_id: Dict[QWebEngineView, bool]) -> None:
         web_view, _ = self.browser[browser_id]
         self.browser[browser_id] = (web_view, True)
-        frame = web_view.page()
-        dom = frame.toHtml()
+        frame = web_view.page().mainFrame()
+        dom = frame.toHtml().encode("utf-8")
         self.urls_result += parse_dom(dom, self.url)
-        web_view.loadFinished(False)
+        web_view.loadFinished.disconnect()
         web_view.stop()
 
         if all([closed for _, closed in self.browser.values()]):
@@ -34,9 +35,9 @@ class Downloader(object):
             self.url = self._get_path(url)
             web_view = QWebEngineView()
             web_view.settings().setAttribute(QWebEngineSettings.WebAttribute.AutoLoadImages, False)
-            #loader = partial(self._loader_finished, browser_id)
-            web_view.loadFinished(True)
-            web_view.load(QUrl(url=url))
+            loader = partial(self._loader_finished, browser_id)
+            web_view.loadFinished.connect(loader)
+            web_view.load(QUrl(url))
             self.browser[browser_id] = (web_view, False)
 
         return self.urls_result

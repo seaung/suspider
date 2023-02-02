@@ -8,16 +8,12 @@ authors = ["seaung <seaung.c0m7de@protonmail.com>"]
 python = "^3.10"
 requests = "^2.28.2"
 bs4 = "^0.0.1"
-pyqt5 = "^5.15.8"
-pyqtwebengine = "^5.15.6"
 sip = "^6.7.6"
+PyQt5 = "^5.15.8"
+PyQtWebEngine = "^5.15.6"
 
 [tool.poetry.dev-dependencies]
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
-
-[[tool.poetry.source]]
-name = "douban"
-url = "https://pypi.doubanio.com/simple/"

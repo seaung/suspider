@@ -28,11 +28,16 @@ class Crawler(object):
 
     def _connect_db(self, url: str) -> Connection:
         db_file = get_md5(url)
-        if os.path.exists(f"./db/{db_file}.db3"):
-            os.remove(f"./db/{db_file}.db3")
+        if os.path.exists(f"./{db_file}.db3"):
+            os.remove(f"./{db_file}.db3")
 
-        conn = sqlite3.connect(f"./db/{db_file}.db3", check_same_thread=False)
-        conn.execute("")
+        conn = sqlite3.connect(f"./{db_file}.db3", check_same_thread=False)
+        conn.execute("""
+        CREATE TABLE urls
+            (ID INT PRIMARY KEY  NOT NULL,
+            url TEXT       NOT NULL,
+            md5 TEXT       NOT NULL);""")
+        print("create db success")
         return conn
 
     def crawler(self) -> None:
@@ -54,4 +59,5 @@ class Crawler(object):
     def start(self) -> None:
         self.crawler()
         self.conn.close()
+
 

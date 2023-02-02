@@ -5,7 +5,7 @@ from typing import Any
 
 def get_md5(src: Any) -> str:
     m = hashlib.md5()
-    m.update(src)
+    m.update(src.encode("utf-8"))
     return m.hexdigest()
 
 
