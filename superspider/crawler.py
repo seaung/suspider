@@ -47,27 +47,36 @@ class Crawler(object):
 
     def crawler(self) -> None:
         app = QApplication(sys.argv)
+        print(f"开始爬取，最大深度设置为: {self.max_depth}")
         while not self._is_empty() and self.current_depth < self.max_depth:
             current_urls = self.urls.copy()
             self.urls = []
             
+            print(f"\n当前爬取深度: {self.current_depth}")
+            print(f"本轮需要处理的URL数量: {len(current_urls)}")
+            
             for item in current_urls:
-                print(f"current item : {item}")
+                print(f"正在处理URL: {item}")
                 time.sleep(self.request_delay)  # 添加请求延迟
 
             downloader = Downloader(app=app, checker_urls=self.checker_urls)
             downloader.run(current_urls)
             app.exec_()
 
+            # 处理新发现的URL
             for item in self.checker_urls:
                 normalized_url = self._normalize(item)
-                if not duplicate(self.conn, self.id, normalized_url):
+                # 将URL存入数据库，如果是新URL则加入待爬取列表
+                if not duplicate(self.conn, self.id, normalized_url, self.current_depth + 1):
                     self.urls.append(normalized_url)
             
             self.current_depth += 1
             self.checker_urls = []
 
     def start(self) -> None:
+        # 确保第一个URL被插入数据库
+        initial_url = self.urls[0]
+        duplicate(self.conn, self.id, initial_url, 0)
         self.crawler()
         self.conn.close()
 

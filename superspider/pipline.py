@@ -32,7 +32,7 @@ def diif_url_from_url(url: str) -> str:
     url = url.rstrip("&")
     url = url.rstrip("?")
 
-    pattern = re.compile("\d+")
+    pattern = re.compile(r"\d+")
     url = re.sub(pattern, "d+", url)
     return url
 

@@ -73,12 +73,6 @@ class Downloader(object):
                 self.app.quit()
 
     def _loader_finished(self, browser_id: int, success: bool) -> None:
-        """页面加载完成的回调处理。
-
-        Args:
-            browser_id: 浏览器实例ID
-            success: 加载是否成功
-        """
         if not success:
             self._handle_load_error(browser_id, 0)
             return
@@ -90,14 +84,19 @@ class Downloader(object):
         self.browser[browser_id] = (web_view, True)
 
         def handle_html_ready(html: str) -> None:
-            """处理HTML内容就绪。
-
-            Args:
-                html: 页面的HTML内容
-            """
             try:
                 dom = html.encode("utf-8")
-                self.urls_result += parse_dom(dom, self.url)
+                print(f"正在解析页面: {self.url}")
+                parsed_urls = parse_dom(dom, self.url)
+                if parsed_urls:
+                    print(f"在页面 {self.url} 中发现 {len(parsed_urls)} 个URL")
+                    # 确保解析到的URL被正确添加到结果列表中
+                    for url in parsed_urls:
+                        if url not in self.urls_result:
+                            print(f"发现新URL: {url}")
+                            self.urls_result.append(url)
+                else:
+                    print(f"页面 {self.url} 中未发现任何URL")
             except Exception as e:
                 print(f"Error parsing HTML: {e}")
             finally:

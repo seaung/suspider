@@ -80,7 +80,7 @@ class URL(object):
             str: 处理后的URL字符串，如果处理失败返回空字符串
         """
         try:
-            link_pattern = re.compile("[\"\'][ ]*\+[ ]*[\"\']")
+            link_pattern = re.compile(r"[\"\'][ ]*\+[ ]*[\"\']")
             link = re.sub(link_pattern, "", link)
             return link.strip("'\"")
         except Exception:
