@@ -1,5 +1,6 @@
 import os
 import sys
+import time
 import sqlite3
 
 from sqlite3 import Connection
@@ -11,11 +12,14 @@ from superspider.downloader import Downloader
 
 
 class Crawler(object):
-    def __init__(self, url: str) -> None:
+    def __init__(self, url: str, max_depth: int = 3, request_delay: float = 1.0) -> None:
         self.urls = [url]
         self.checker_urls = []
         self.id = [0]
-        self.conn = self._connect_db(url=url)
+        self.max_depth = max_depth
+        self.current_depth = 0
+        self.request_delay = request_delay
+        self.conn = self._connect_db(url=self._normalize(url))
 
     def _normalize(self, url: str) -> str:
         url = url.rstrip("/") + "/"
@@ -36,25 +40,32 @@ class Crawler(object):
         CREATE TABLE urls
             (ID INT PRIMARY KEY  NOT NULL,
             url TEXT       NOT NULL,
-            md5 TEXT       NOT NULL);""")
+            md5 TEXT       NOT NULL,
+            depth INT      NOT NULL);""")  # 添加深度字段
         print("create db success")
         return conn
 
     def crawler(self) -> None:
         app = QApplication(sys.argv)
-        while not self._is_empty():
-            for item in self.urls:
+        while not self._is_empty() and self.current_depth < self.max_depth:
+            current_urls = self.urls.copy()
+            self.urls = []
+            
+            for item in current_urls:
                 print(f"current item : {item}")
+                time.sleep(self.request_delay)  # 添加请求延迟
 
             downloader = Downloader(app=app, checker_urls=self.checker_urls)
-            downloader.run(self.urls)
+            downloader.run(current_urls)
             app.exec_()
-            self.urls = []
-            for item in self.checker_urls:
-                if not duplicate(self.conn, self.id, item):
-                    self.urls.append(item)
 
-            self.urls = []
+            for item in self.checker_urls:
+                normalized_url = self._normalize(item)
+                if not duplicate(self.conn, self.id, normalized_url):
+                    self.urls.append(normalized_url)
+            
+            self.current_depth += 1
+            self.checker_urls = []
 
     def start(self) -> None:
         self.crawler()

@@ -1,0 +1,16 @@
+beautifulsoup4==4.12.3
+bs4==0.0.2
+certifi==2024.12.14
+charset-normalizer==3.4.1
+idna==3.10
+packaging==24.2
+PyQt5==5.15.11
+PyQt5-Qt5==5.15.16
+PyQt5_sip==12.16.1
+PyQtWebEngine==5.15.7
+PyQtWebEngine-Qt5==5.15.16
+requests==2.32.3
+setuptools==75.8.0
+sip==6.9.1
+soupsieve==2.6
+urllib3==2.3.0
